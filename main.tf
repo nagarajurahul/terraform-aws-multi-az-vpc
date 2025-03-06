@@ -40,11 +40,11 @@ locals {
 # Generate cidrs for public and private subnets
 locals{
   private_subnet_cidrs = [
-    for i in range(data.az_count) : cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + 1)
+    for i in range(local.az_count) : cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + 1)
   ]
 
   public_subnet_cidrs = [
-    for i in range(data.az_count) : cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + data.az_count + 1)
+    for i in range(local.az_count) : cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + local.az_count + 1)
   ]  
 }
 
