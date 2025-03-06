@@ -8,3 +8,8 @@ resource "aws_vpc" "main"{
        "Name" = "multi-az-vpc" 
     }
 }
+
+resource "aws_subnet" "public"{
+    vpc_id = aws_vpc.main.id
+    # cidr_block = 
+}
