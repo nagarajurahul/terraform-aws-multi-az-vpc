@@ -5,5 +5,10 @@ variable "vpc_cidr"{
 
 variable "region"{
     type = string
-    
+    description = "The AWS Region where VPC will be deployed"
+
+    validation {
+      condition = contains(data.aws_regions.names, lower(var.region))
+      error_message = "Please enter a valid AWS region"
+    }
 }
