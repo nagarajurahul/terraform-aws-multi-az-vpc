@@ -12,7 +12,7 @@ data "aws_availability_zones" "available" {
 }
 
 locals{
-    az_count = count(data.aws_availability_zones.available.names)
+    az_count = length(data.aws_availability_zones.available.names)
 }
 
 # Create aws vpc resource
