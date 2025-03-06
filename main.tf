@@ -49,7 +49,16 @@ locals{
 }
 
 
-# resource "aws_subnet" "private"{
-#     vpc_id = aws_vpc.main.id
-#     # cidr_block = 
-# }
+resource "aws_subnet" "private"{
+    count = local.az_count
+    vpc_id = aws_vpc.main.id
+    cidr_block = local.private_subnet_cidrs[count.index]
+    availability_zone = element(data.aws_availability_zones.available.names,count.index)
+}
+
+resource "aws_subnet" "public"{
+    count = local.az_count
+    vpc_id = aws_vpc.main.id
+    cidr_block = local.public_subnet_cidrs[count.index]
+    availability_zone = element(data.aws_availability_zones.available.names,count.index)
+}
