@@ -16,7 +16,7 @@ variable "region"{
 
 variable "number_of_devices_per_subnet"{
     description = "Number of devices to support in each subnet"
-    type = Number
+    type = number
     default = 249
 }
 
