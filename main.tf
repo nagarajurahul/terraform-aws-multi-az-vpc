@@ -2,6 +2,7 @@ provider "aws"{
     region = var.region
 }
 
+
 data "aws_regions" "current"{
 
 }
@@ -11,9 +12,11 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+
 locals{
     az_count = length(data.aws_availability_zones.available.names)
 }
+
 
 # Create aws vpc resource
 resource "aws_vpc" "main"{
@@ -23,6 +26,7 @@ resource "aws_vpc" "main"{
        "Name" = var.vpc_name
     }
 }
+
 
 # Maximum number of devices allocated per subnet will be 2041
 # Minimum number of devices allocated will be 249
@@ -38,6 +42,7 @@ locals {
   )
 }
 
+
 # Generate cidrs for public and private subnets
 locals{
   private_subnet_cidrs = [
@@ -48,6 +53,7 @@ locals{
     for i in range(local.az_count) : cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + local.az_count + 1)
   ]  
 }
+
 
 
 resource "aws_subnet" "private"{
