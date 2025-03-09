@@ -1,6 +1,7 @@
 variable "vpc_cidr"{
     type = string
     description = "CIDR for the VPC"
+
     default = "10.0.0.0/16"
 }
 
@@ -17,6 +18,7 @@ variable "region"{
 variable "number_of_devices_per_subnet"{
     description = "Number of devices to support in each subnet"
     type = number
+    
     default = 249
 }
 

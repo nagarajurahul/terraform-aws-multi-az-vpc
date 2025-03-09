@@ -6,7 +6,7 @@ data "aws_regions" "current"{
 
 }
 
-# Pull avialable azs dynamically from aws for current region
+# Pull avialable azs dynamically from aws for the current region
 data "aws_availability_zones" "available" {
   state = "available"
 }
@@ -23,8 +23,8 @@ resource "aws_vpc" "main"{
     }
 }
 
-# Maximum number of supported devices per subnet are 2041
-# Minimum is 249
+# Maximum number of devices allocated per subnet will be 2041
+# Minimum number of devices allocated will be 249
 
 # Calculate the subnet mask
 locals {
