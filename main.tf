@@ -97,4 +97,8 @@ resource "aws_route_table" "public"{
     cidr_block = "0.0.0.0/24"
     gateway_id = aws_internet_gateway.igw.id
   }
+
+  tags = {
+    Name = "${var.vpc_name}-public-rt"
+  }
 }
