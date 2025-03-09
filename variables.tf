@@ -5,6 +5,13 @@ variable "vpc_cidr"{
     default = "10.0.0.0/16"
 }
 
+variable "vpc_name"{
+    type = string
+    description = "Name of the VPC"
+
+    default = "multi-az-vpc"
+}
+
 variable "region"{
     type = string
     description = "The AWS Region where VPC will be deployed"
