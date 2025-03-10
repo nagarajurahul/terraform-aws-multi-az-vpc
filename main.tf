@@ -135,3 +135,10 @@ resource "aws_route_table" "private" {
     Name = "${var.vpc_name}-private-rt"
   }
 }
+
+resource "aws_route_table_association" "private" {
+  count = local.az_count
+
+  subnet_id = element(aws_subnet.private[*].id,count.index)
+  route_table_id = aws_route_table.private.id
+}
