@@ -3,10 +3,6 @@ provider "aws"{
 }
 
 
-data "aws_regions" "current"{
-
-}
-
 # Pull avialable azs dynamically from aws for the current region
 data "aws_availability_zones" "available" {
   state = "available"
