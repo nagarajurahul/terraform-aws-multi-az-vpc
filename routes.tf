@@ -34,11 +34,13 @@ resource "aws_route_table_association" "public" {
 
 
 resource "aws_eip" "nat"{
-
+    count = var.enable_nat_gateway ? 1 : 0
 }
 
 resource "aws_nat_gateway" "nat"{
-  allocation_id = aws_eip.nat.id
+  count = var.enable_nat_gateway ? 1 : 0
+
+  allocation_id = aws_eip.nat[0].id
   subnet_id = aws_subnet.private[0].id
 
   tags= merge(
@@ -50,6 +52,8 @@ resource "aws_nat_gateway" "nat"{
 }
 
 resource "aws_route_table" "private" {
+  count = var.enable_nat_gateway ? 1 : 0
+
   vpc_id = aws_vpc.main.id
 
   route {
@@ -66,7 +70,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count = local.az_count
+  count = var.enable_nat_gateway ? local.az_count : 0
 
   subnet_id = element(aws_subnet.private[*].id,count.index)
   route_table_id = aws_route_table.private.id
