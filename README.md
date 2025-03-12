@@ -1,6 +1,3 @@
-# terraform-aws-multi-az-vpc
-Public repo to deploy multi az vpc in AWS
-
 ## Multi-AZ VPC Terraform Module
 
 ### Overview
