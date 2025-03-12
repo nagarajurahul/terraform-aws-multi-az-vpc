@@ -33,6 +33,6 @@ variable "number_of_devices_per_subnet"{
 variable "tags" {
   description = "Common tags for all resources"
   type        = map(string)
-  
-  default     = { "VPC" = var.vpc_name }
+
+  default     = { "Environment" =  "Production" }
 }
