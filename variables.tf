@@ -36,3 +36,11 @@ variable "tags" {
 
   default     = { "Environment" =  "Production" }
 }
+
+
+variable "enable_nat_gateway" {
+  description = "Enable NAT Gateway for private subnets"
+  type        = bool
+  
+  default     = true
+}
