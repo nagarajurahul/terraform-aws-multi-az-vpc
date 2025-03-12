@@ -18,7 +18,7 @@ locals{
 resource "aws_vpc" "main"{
     cidr_block = var.vpc_cidr
 
-    tags = {
+    tags={
        "Name" = var.vpc_name
     }
 }
@@ -80,7 +80,7 @@ resource "aws_subnet" "public"{
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
+  tags={
     Name = "${var.vpc_name}-igw"
   }
 }
@@ -93,7 +93,7 @@ resource "aws_route_table" "public"{
     gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = {
+  tags={
     Name = "${var.vpc_name}-public-rt"
   }
 }
@@ -114,7 +114,7 @@ resource "aws_nat_gateway" "nat"{
   allocation_id = aws_eip.nat.id
   subnet_id = aws_subnet.private[0].id
 
-  tags = {
+  tags={
     Name = "${var.vpc_name}-nat"
   }
 }
@@ -127,7 +127,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = aws_nat_gateway.nat.id
   }
 
-  tags = {
+  tags={
     Name = "${var.vpc_name}-private-rt"
   }
 }
