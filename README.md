@@ -21,7 +21,12 @@ This module is designed for scalability, security, and best cloud architecture p
 
 ```hcl
 module "multi_az_vpc" {
-  source  = "github.com/your-github-username/multi-az-vpc"
+  source  = "rahulnagaraju724/multi-az-vpc/aws"
+  version = "1.0.2"
+
+  # Or use this as a source with commenting the version line
+  # source = "github.com/rahulnagaraju724/terraform-aws-multi-az-vpc"
+  
   region  = "us-east-1"
   vpc_cidr = "10.0.0.0/16"
   vpc_name = "my-multi-az-vpc"
