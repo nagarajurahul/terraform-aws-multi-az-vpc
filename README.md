@@ -2,11 +2,15 @@
 
 ### Overview
 
-This Terraform module creates a highly available, Multi-AZ Virtual Private Cloud (VPC) in AWS. It provisions public and private subnets, an Internet Gateway, and an optional NAT Gateway for secure outbound traffic from private subnets. 
+This Terraform module creates a highly available, Multi-AZ Virtual Private Cloud (VPC) in AWS. 
+
+It provisions public and private subnets, an Internet Gateway, and an optional NAT Gateway for secure outbound traffic from private subnets. 
 
 This module is designed for scalability, security, and best cloud architecture practices.
 
 ## Features
+
+**DNS Support for VPC**: It enables DNS support and hostnames for the VPC, by default.
 
 **Multi-AZ Deployment**: Dynamically provisions subnets across all available Availability Zones (AZs) in the selected AWS region.
 
