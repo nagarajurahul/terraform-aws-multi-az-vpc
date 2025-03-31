@@ -17,6 +17,15 @@ resource "aws_route_table" "public"{
     gateway_id = aws_internet_gateway.igw.id
   }
 
+  # IPv6 Route for Public Subnet
+  dynamic "route" {
+    for_each = var.enable_ipv6 ? [1] : []
+    content {
+      ipv6_cidr_block = "::/0"
+      gateway_id      = aws_internet_gateway.igw.id
+    }
+  }
+
   tags = merge(
     var.tags, 
     {
@@ -51,6 +60,20 @@ resource "aws_nat_gateway" "nat"{
   )
 }
 
+
+resource "aws_egress_only_internet_gateway" "egw" {
+  count = var.enable_ipv6 ? 1 : 0
+  
+  vpc_id = aws_vpc.main.id
+
+  tags = merge(
+    var.tags, 
+    {
+      Name = "${var.vpc_name}-egw"
+    }
+  )
+}
+
 resource "aws_route_table" "private" {
   count = var.enable_nat_gateway ? 1 : 0
 
@@ -59,6 +82,15 @@ resource "aws_route_table" "private" {
   route {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat[0].id
+  }
+
+  # IPv6 Route for Private Subnet (If NAT Gateway is enabled)
+  dynamic "route" {
+    for_each = var.enable_ipv6 ? [1] : []
+    content {
+      ipv6_cidr_block = "::/0"
+      egress_only_gateway_id = aws_egress_only_internet_gateway.egw[0].id
+    }
   }
 
   tags= merge(

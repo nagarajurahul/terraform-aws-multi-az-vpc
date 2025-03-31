@@ -28,6 +28,24 @@ locals{
   ]  
 }
 
+# IPv6 CIDR Block for VPC
+# resource "aws_vpc_ipv6_cidr_block_association" "ipv6" {
+#   count  = var.enable_ipv6 ? 1 : 0
+#   vpc_id = aws_vpc.main.id
+# }
+
+# Generate CIDRs for IPv6 Subnets
+locals {
+  private_subnet_ipv6_cidrs = var.enable_ipv6 ? [
+    # for i in range(local.az_count) : cidrsubnet(aws_vpc_ipv6_cidr_block_association.ipv6[0].ipv6_cidr_block, 8, i)
+    for i in range(local.az_count) : cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, i)
+
+  ] : []
+
+  public_subnet_ipv6_cidrs = var.enable_ipv6 ? [
+    for i in range(local.az_count) : cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, i + local.az_count)
+  ] : []
+}
 
 
 resource "aws_subnet" "private"{
@@ -36,6 +54,9 @@ resource "aws_subnet" "private"{
     vpc_id = aws_vpc.main.id
     cidr_block = local.private_subnet_cidrs[count.index]
     availability_zone = element(data.aws_availability_zones.available.names,count.index)
+
+    assign_ipv6_address_on_creation = var.enable_ipv6
+    ipv6_cidr_block = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs[count.index] : null
 
     tags = merge(
       var.tags, 
@@ -52,6 +73,10 @@ resource "aws_subnet" "public"{
     cidr_block = local.public_subnet_cidrs[count.index]
     availability_zone = element(data.aws_availability_zones.available.names,count.index)
 
+    assign_ipv6_address_on_creation = var.enable_ipv6
+    # ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, count.index)
+    ipv6_cidr_block = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs[count.index] : null
+    
     tags = merge(
       var.tags, 
       {

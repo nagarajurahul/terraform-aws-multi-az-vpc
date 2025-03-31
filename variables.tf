@@ -44,3 +44,10 @@ variable "enable_nat_gateway" {
   
   default     = true
 }
+
+variable "enable_ipv6" {
+  description = "Enable ipv6 for VPC and subnets"
+  type = bool
+
+  default = false
+}
