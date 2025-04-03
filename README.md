@@ -103,3 +103,7 @@ terraform destroy -auto-approve
 * **NAT Gateway**: If you choose to use a NAT Gateway (enable_nat_gateway = true), this will be created in one of the public subnets, and a route will be configured for private subnets to route traffic through it.
 
 * **Multi-AZ Deployment**: The module will automatically create subnets across all available AZs in the selected region. This ensures high availability and fault tolerance for your infrastructure.
+
+## Contributions
+
+This module is open-source. Contributions and improvements are welcome! If you encounter any issues or have suggestions, please feel free to open an issue or create a pull request.
