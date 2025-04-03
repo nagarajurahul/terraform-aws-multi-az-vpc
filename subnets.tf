@@ -74,7 +74,6 @@ resource "aws_subnet" "public"{
     availability_zone = element(data.aws_availability_zones.available.names,count.index)
 
     assign_ipv6_address_on_creation = var.enable_ipv6
-    # ipv6_cidr_block   = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, count.index)
     ipv6_cidr_block = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs[count.index] : null
     
     tags = merge(
