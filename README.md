@@ -47,17 +47,25 @@ module "multi_az_vpc" {
   source  = "nagarajurahul/multi-az-vpc/aws"
   version = "1.0.2"
 
-  # Or use this as a source with commenting the version line
-  # source = "github.com/nagarajurahul/terraform-aws-multi-az-vpc"
-  
+  # Specify the AWS region for the VPC deployment
   region  = "us-east-1"
+  
+  # VPC CIDR block
   vpc_cidr = "10.0.0.0/16"
+
+  # VPC Name (for tagging purposes)
   vpc_name = "my-multi-az-vpc"
+
+  # Enable or disable NAT Gateway (optional)
   enable_nat_gateway = true
 
-  number_of_devices_per_subnet=700
+  # Number of devices per subnet (used to calculate subnet sizes)
+  number_of_devices_per_subnet = 700
+  
+  # Enable IPv6 support (default is false)
   enable_ipv6 = true
-
+  
+  # Tags for resource identification and organization
   tags = { "Project" = "CloudInfra" }
 }
 ```
@@ -87,3 +95,11 @@ terraform apply -auto-approve
 ```
 terraform destroy -auto-approve
 ```
+
+## Important Notes
+
+* **IPv6**: When enable_ipv6 is set to true, the module automatically assigns an IPv6 CIDR block to the VPC, and subnets will be allocated based on this.
+
+* **NAT Gateway**: If you choose to use a NAT Gateway (enable_nat_gateway = true), this will be created in one of the public subnets, and a route will be configured for private subnets to route traffic through it.
+
+* **Multi-AZ Deployment**: The module will automatically create subnets across all available AZs in the selected region. This ensures high availability and fault tolerance for your infrastructure.
