@@ -6,6 +6,8 @@ This Terraform module creates a highly available, Multi-AZ Virtual Private Cloud
 
 It provisions public and private subnets, an Internet Gateway, and an optional NAT Gateway for secure outbound traffic from private subnets. 
 
+New - Added IPv6 support
+
 This module is designed for scalability, security, and best cloud architecture practices.
 
 ## Features
@@ -16,7 +18,7 @@ This module is designed for scalability, security, and best cloud architecture p
 
 **Public & Private Subnets**: Automatically calculates subnet CIDRs based on the number of devices per subnet.
 
-**New - ipv6 Support**: Add ipv6 address support to the VPC and our subnets through ipv6 CIDRs.
+**IPv6 Support**: Add ipv6 address support to the VPC and our subnets through ipv6 CIDRs.
 
 **Highly Available NAT Gateway (Optional)**: Supports single or no NAT Gateway for cost efficiency.
 
