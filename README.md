@@ -107,3 +107,8 @@ terraform destroy -auto-approve
 ## Contributions
 
 This module is open-source. Contributions and improvements are welcome! If you encounter any issues or have suggestions, please feel free to open an issue or create a pull request.
+
+
+## License
+
+This module is licensed under the MIT License. See [LICENSE](./LICENSE) for more details.
