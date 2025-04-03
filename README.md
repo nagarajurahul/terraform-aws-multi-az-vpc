@@ -16,6 +16,8 @@ This module is designed for scalability, security, and best cloud architecture p
 
 **Public & Private Subnets**: Automatically calculates subnet CIDRs based on the number of devices per subnet.
 
+**New - ipv6 Support**: Add ipv6 address support to the VPC and our subnets through ipv6 CIDRs.
+
 **Highly Available NAT Gateway (Optional)**: Supports single or no NAT Gateway for cost efficiency.
 
 **Tagging Support**: Apply common tags to all resources.
@@ -35,6 +37,10 @@ module "multi_az_vpc" {
   vpc_cidr = "10.0.0.0/16"
   vpc_name = "my-multi-az-vpc"
   enable_nat_gateway = true
+
+  number_of_devices_per_subnet=700
+  enable_ipv6 = true
+
   tags = { "Project" = "CloudInfra" }
 }
 ```
