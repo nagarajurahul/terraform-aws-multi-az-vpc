@@ -6,24 +6,39 @@ This Terraform module creates a highly available, Multi-AZ Virtual Private Cloud
 
 It provisions public and private subnets, an Internet Gateway, and an optional NAT Gateway for secure outbound traffic from private subnets. 
 
-New - Added IPv6 support
+New - Additionally, IPv6 support is included for modern network requirements.
 
 This module is designed for scalability, security, and best cloud architecture practices.
 
 ## Features
 
-**DNS Support for VPC**: It enables DNS support and hostnames for the VPC, by default.
+**DNS Support for VPC**: Automatically enables DNS support and hostnames within the VPC.
 
 **Multi-AZ Deployment**: Dynamically provisions subnets across all available Availability Zones (AZs) in the selected AWS region.
 
-**Public & Private Subnets**: Automatically calculates subnet CIDRs based on the number of devices per subnet.
+**Public & Private Subnets**: Efficiently calculates subnet CIDRs based on the desired number of devices per subnet.
 
-**IPv6 Support**: Add ipv6 address support to the VPC and our subnets through ipv6 CIDRs.
+**IPv6 Support**: Adds IPv6 addressing to both the VPC and subnets, ensuring scalability and future-proofing for your infrastructure.
 
-**Highly Available NAT Gateway (Optional)**: Supports single or no NAT Gateway for cost efficiency.
+**Highly Available NAT Gateway (Optional)**: Includes support for a single or multiple NAT Gateways for secure, cost-effective internet access from private subnets.
 
-**Tagging Support**: Apply common tags to all resources.
+**Tagging Support**: Ensures consistent resource tagging across all provisioned resources, making it easy to manage and identify resources in your environment.
 
+## Architecture
+
+This module provisions the following AWS resources:
+
+* VPC with customizable CIDR block
+
+* Public and Private Subnets across multiple Availability Zones (AZs)
+
+* Internet Gateway for public access
+
+* NAT Gateway (optional, for private subnet outbound traffic)
+
+* Route Tables for routing configurations
+
+* IPv6 CIDR blocks (if enabled)
 
 ## Usage
 
