@@ -1,7 +1,3 @@
-provider "aws"{
-    region = var.region
-}
-
 # Pull available azs dynamically from aws for the current region
 data "aws_availability_zones" "available" {
   state = "available"
