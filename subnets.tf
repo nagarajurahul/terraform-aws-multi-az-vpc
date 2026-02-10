@@ -2,17 +2,17 @@ locals{
     az_count = length(data.aws_availability_zones.available.names)
 }
 
-# Maximum number of devices allocated per subnet will be 2041
-# Minimum number of devices allocated will be 249
+# Maximum number of devices allocated per subnet will be 2043
+# Minimum number of devices allocated will be 251
 
 # Calculate the subnet mask
 locals {
     usable_ips = var.number_of_devices_per_subnet + 5 # Add 5 for reserved IPs by AWS
 
     subnet_mask = (
-    local.usable_ips <= 254 ? 24 : # 256 total IPs, 254 usable
-    local.usable_ips <= 510 ? 23 : # 512 total IPs, 510 usable
-    local.usable_ips <= 1022 ? 22 : 21 # 1024 total IPs, 1022 usable
+    local.usable_ips <= 256 ? 24 : # 256 total IPs, 251 usable
+    local.usable_ips <= 512 ? 23 : # 512 total IPs, 507 usable
+    local.usable_ips <= 1024 ? 22 : 21 # 1024 total IPs, 1019 usable
   )
 }
 
