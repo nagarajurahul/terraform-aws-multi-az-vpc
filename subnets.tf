@@ -69,6 +69,11 @@ resource "aws_subnet" "private"{
         Name = "${var.vpc_name}-private-${count.index}"
       }
     )
+
+    lifecycle {
+      # Enable this as true while implementing in production
+      prevent_destroy = false
+    }
 }
 
 resource "aws_subnet" "public"{
@@ -87,4 +92,9 @@ resource "aws_subnet" "public"{
           Name = "${var.vpc_name}-public-${count.index}"
       }
     )
+    
+    lifecycle {
+      # Enable this as true while implementing in production
+      prevent_destroy = false
+    }
 }
