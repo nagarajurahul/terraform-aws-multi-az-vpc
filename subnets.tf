@@ -7,7 +7,7 @@ locals{
 
 # Calculate the subnet mask
 locals {
-    usable_ips = var.number_of_devices_per_subnet + 5 # Add 5 for reserved IPs by AWS
+    usable_ips = var.number_of_required_ips_per_subnet + 5 # Add 5 for reserved IPs by AWS
 
     subnet_mask = (
     local.usable_ips <= 256 ? 24 : # 256 total IPs, 251 usable

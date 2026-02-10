@@ -23,11 +23,11 @@ variable "vpc_name"{
 }
 
 
-variable "number_of_devices_per_subnet"{
-    description = "Number of devices to support in each subnet"
+variable "number_of_required_ips_per_subnet"{
+    description = "Number of required IPs to support in each subnet"
     type = number
 
-    default = 249
+    default = 251
 }
 
 variable "tags" {

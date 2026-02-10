@@ -60,7 +60,7 @@ module "multi_az_vpc" {
   enable_nat_gateway = true
 
   # Number of devices per subnet (used to calculate subnet sizes)
-  number_of_devices_per_subnet = 700
+  number_of_required_ips_per_subnet = 700
   
   # Enable IPv6 support (default is false)
   enable_ipv6 = true
