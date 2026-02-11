@@ -18,9 +18,42 @@ output "public_subnet_cidrs"{
     value = local.public_subnet_cidrs
 }
 
-output "subnet_ids" {
-  description = "IDs of the subnets"
-  value       = aws_subnet.private.*.id
+output "private_subnet_ids" {
+  description = "IDs of the private subnets"
+  value       = {
+    for az,subnet in aws_subnet.private :
+    az => subnet.id
+  }
+}
+
+output "public_subnet_ids" {
+  description = "IDs of the public subnets"
+  value       = {
+    for az,subnet in aws_subnet.public :
+    az => subnet.id
+  }
+}
+
+output "private_subnets" {
+  description = "Private subnets"
+  value       = {
+    for az,subnet in aws_subnet.private :
+    az => {
+      "id" = subnet.id
+      "cidr_block" = subnet.cidr_block
+    }
+  }
+}
+
+output "public_subnets" {
+  description = "Public subnets"
+  value       = {
+    for az,subnet in aws_subnet.public :
+    az => {
+      "id" = subnet.id
+      "cidr_block" = subnet.cidr_block
+    }
+  }
 }
 
 output "vpc_ipv6_cidr_block" {
@@ -28,16 +61,16 @@ output "vpc_ipv6_cidr_block" {
   value       = var.enable_ipv6 ? aws_vpc.main.ipv6_cidr_block : null
 }
 
-output "private_subnet_ipv6_cidrs" {
-  description = "IPv6 CIDRs for private subnets"
-  value       = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs : null
+# output "private_subnet_ipv6_cidrs" {
+#   description = "IPv6 CIDRs for private subnets"
+#   value       = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs : null
 
-  sensitive   = true
-}
+#   sensitive   = true
+# }
 
-output "public_subnet_ipv6_cidrs" {
-  description = "IPv6 CIDRs for public subnets"
-  value       = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs : null
+# output "public_subnet_ipv6_cidrs" {
+#   description = "IPv6 CIDRs for public subnets"
+#   value       = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs : null
 
-  sensitive   = true
-}
+#   sensitive   = true
+# }
