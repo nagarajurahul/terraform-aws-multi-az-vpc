@@ -102,10 +102,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run tfsec
-        uses: aquasecurity/tfsec-action@v1.0.3
+      - name: Run Trivy (Terraform misconfiguration scan)
+        uses: aquasecurity/trivy-action@0.33.1
         with:
-          additional_args: --format sarif --out tfsec.sarif
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          ignore-unfixed: true
 
   #############################################
   # Job 4: Terraform Docs
