@@ -51,3 +51,14 @@ variable "enable_ipv6" {
 
   default = false
 }
+
+variable "availability_zones" {
+  description = "Availability zones to create public and private subnets"
+  type = map(object({
+    availability_zone  = string
+    public_subnet      = bool
+    private_subnet     = bool
+    enable_nat_gateway = bool
+  }))
+  #"For enabling Nat gateway for private subnet in this AZ, we also need to create the public subnet in the same AZ - this is to avoid cross AZ traffic costs"
+}
