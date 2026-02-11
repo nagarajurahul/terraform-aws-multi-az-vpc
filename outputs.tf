@@ -11,29 +11,21 @@ output "vpc_cidr_block" {
 output "private_subnet_cidrs"{
     description = "CIDRs for the private subnets"
     value = local.private_subnet_cidrs
-
-    sensitive   = true
 }
 
 output "public_subnet_cidrs"{
     description = "CIDRs for the public subnets"
     value = local.public_subnet_cidrs
-
-    sensitive   = true
 }
 
 output "subnet_ids" {
   description = "IDs of the subnets"
   value       = aws_subnet.private.*.id
-
-  sensitive   = true
 }
 
 output "vpc_ipv6_cidr_block" {
   description = "The IPv6 CIDR block of the VPC"
   value       = var.enable_ipv6 ? aws_vpc.main.ipv6_cidr_block : null
-
-  sensitive   = true
 }
 
 output "private_subnet_ipv6_cidrs" {
