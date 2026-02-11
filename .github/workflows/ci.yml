@@ -1,0 +1,174 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+env:
+  # verbosity setting for Terraform logs
+  TF_LOG: INFO
+  TERRAFORM_VERSION: '1.14.4'
+
+jobs:
+  #############################################
+  # Job 1: Terraform Validation
+  #############################################
+  terraform-validate:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+
+      - name: Terraform Format Check
+        id: fmt
+        run: terraform fmt -check -recursive
+        continue-on-error: true
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -backend=false
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Comment PR - Format Check
+        if: github.event_name == 'pull_request' && steps.fmt.outcome == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Terraform Format Check Failed**\n\nPlease run `terraform fmt -recursive` to fix formatting issues.'
+            })
+
+      - name: Fail if format check failed
+        if: steps.fmt.outcome == 'failure'
+        run: exit 1
+
+  #############################################
+  # Job 2: TFLint
+  #############################################
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache TFLint plugins
+        uses: actions/cache@v4
+        with:
+          path: ~/.tflint.d/plugins
+          key: ${{ runner.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+        with:
+          tflint_version: latest
+
+      - name: Initialize TFLint
+        run: tflint --init
+
+      - name: Run TFLint
+        run: tflint --format compact --recursive
+
+  #############################################
+  # Job 3: Security Scanning - tfsec
+  #############################################
+  tfsec:
+    name: tfsec Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy (Terraform misconfiguration scan)
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          ignore-unfixed: true
+
+  #############################################
+  # Job 4: Terraform Docs
+  #############################################
+  terraform-docs:
+    name: Generate Terraform Docs
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Generate terraform docs
+        uses: terraform-docs/gh-actions@v1.2.0
+        with:
+          working-dir: .
+          output-file: README.md
+          output-method: inject
+          git-push: false
+
+      - name: Check if docs changed
+        id: docs-check
+        run: |
+          git diff --exit-code README.md || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Comment PR if docs need update
+        if: github.event_name == 'pull_request' && steps.docs-check.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '📝 **Documentation Update Required**\n\nThe Terraform documentation needs to be regenerated. Please run:\n```bash\nterraform-docs markdown table . --output-file README.md\n```'
+            })
+
+  #############################################
+  # Final Status Check
+  #############################################
+  ci-success:
+    name: CI Success
+    needs:
+      - terraform-validate
+      - tflint
+      - tfsec
+      - terraform-docs
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Check CI Status
+        run: |
+          if [[ "${{ needs.terraform-validate.result }}" != "success" ]] || \
+             [[ "${{ needs.tflint.result }}" != "success" ]] || \
+             [[ "${{ needs.tfsec.result }}" != "success" ]]; then
+            echo "❌ CI pipeline failed"
+            exit 1
+          fi
+          echo "✅ All CI checks passed"
