@@ -18,7 +18,13 @@ locals {
     local.usable_ips <= 256 ? 24 : # 256 total IPs, 251 usable
     local.usable_ips <= 512 ? 23 : # 512 total IPs, 507 usable
     local.usable_ips <= 1024 ? 22 : 21 # 1024 total IPs, 1019 usable
-  )
+    )
+    
+    public_subnet_mask  = 24
+    private_subnet_mask = local.subnet_mask
+
+    public_newbits  = local.public_subnet_mask - 16
+    private_newbits = local.private_subnet_mask - 16
 }
 
 locals {
@@ -30,11 +36,11 @@ locals {
 # Generate cidrs for public and private subnets
 locals{
   private_subnet_cidrs = {
-    for i,value in local.private_azs : value => cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + 1)
+    for i,value in local.private_azs : value => cidrsubnet(var.vpc_cidr, local.private_newbits, i + 1)
   }
 
   public_subnet_cidrs = {
-    for i,value in local.public_azs :  value => cidrsubnet(var.vpc_cidr, local.subnet_mask - 16, i + length(local.public_azs) + 1)
+    for i,value in local.public_azs :  value => cidrsubnet(var.vpc_cidr, local.public_newbits, i + length(local.private_azs) + 1)
   }  
 }
 
