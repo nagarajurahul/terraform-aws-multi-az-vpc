@@ -45,6 +45,7 @@ resource "aws_route_table_association" "public" {
 # Create EIPs for NATs
 resource "aws_eip" "nat" {
   for_each = toset(local.private_azs_with_nat)
+  domain   = "vpc"
 }
 
 # Create NATs in public subnets in a AZ, where private subnets in that specific AZ need NAT for internet access
@@ -64,7 +65,7 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_egress_only_internet_gateway" "egw" {
-  count  = var.enable_ipv6 ? 1 : 0
+  count = var.enable_ipv6 ? 1 : 0
 
   vpc_id = aws_vpc.main.id
 
