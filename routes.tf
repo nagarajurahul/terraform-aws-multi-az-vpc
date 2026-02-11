@@ -63,18 +63,18 @@ resource "aws_nat_gateway" "nat" {
   )
 }
 
-# resource "aws_egress_only_internet_gateway" "egw" {
-#   count = var.enable_ipv6 ? 1 : 0
+resource "aws_egress_only_internet_gateway" "egw" {
+  count  = var.enable_ipv6 ? 1 : 0
 
-#   vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 
-#   tags = merge(
-#     var.tags, 
-#     {
-#       Name = "${var.vpc_name}-egw"
-#     }
-#   )
-# }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.vpc_name}-egw"
+    }
+  )
+}
 
 
 
@@ -88,14 +88,14 @@ resource "aws_route_table" "private_nat" {
     nat_gateway_id = aws_nat_gateway.nat[each.value].id
   }
 
-  # # IPv6 Route for Private Subnet (If NAT Gateway is enabled)
-  # dynamic "route" {
-  #   for_each = var.enable_ipv6 ? [1] : []
-  #   content {
-  #     ipv6_cidr_block = "::/0"
-  #     egress_only_gateway_id = aws_egress_only_internet_gateway.egw[0].id
-  #   }
-  # }
+  # IPv6 Route for Private Subnet (If NAT Gateway is enabled)
+  dynamic "route" {
+    for_each = var.enable_ipv6 ? [1] : []
+    content {
+      ipv6_cidr_block        = "::/0"
+      egress_only_gateway_id = aws_egress_only_internet_gateway.egw[0].id
+    }
+  }
 
   tags = merge(
     var.tags,
