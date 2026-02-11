@@ -73,8 +73,8 @@ locals{
 }
 
 locals {
-  public_ipv6_tier  = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 0) # /60
-  private_ipv6_tier = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 1) # /60
+  public_ipv6_tier  = var.enable_ipv6 ? cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 0) : null # /60
+  private_ipv6_tier = var.enable_ipv6 ? cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 1) : null # /60
 }
 
 # Generate ipv6 cidrs for public and private subnets
