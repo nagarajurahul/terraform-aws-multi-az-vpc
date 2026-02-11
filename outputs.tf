@@ -61,6 +61,16 @@ output "vpc_ipv6_cidr_block" {
   value       = var.enable_ipv6 ? aws_vpc.main.ipv6_cidr_block : null
 }
 
+output "private_tier_cidr" {
+  description = "Public Tier CIDR"
+  value = local.private_tier_cidr
+}
+
+output "public_tier_cidr" {
+  description = "Public Tier CIDR"
+  value = local.public_tier_cidr
+}
+
 # output "private_subnet_ipv6_cidrs" {
 #   description = "IPv6 CIDRs for private subnets"
 #   value       = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs : null
