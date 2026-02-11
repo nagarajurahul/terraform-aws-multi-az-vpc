@@ -72,24 +72,21 @@ locals{
   }  
 }
 
-# IPv6 CIDR Block for VPC
-# resource "aws_vpc_ipv6_cidr_block_association" "ipv6" {
-#   count  = var.enable_ipv6 ? 1 : 0
-#   vpc_id = aws_vpc.main.id
-# }
+locals {
+  public_ipv6_tier  = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 0) # /60
+  private_ipv6_tier = cidrsubnet(aws_vpc.main.ipv6_cidr_block, 4, 1) # /60
+}
 
-# # Generate CIDRs for IPv6 Subnets
-# locals {
-#   private_subnet_ipv6_cidrs = var.enable_ipv6 ? [
-#     # for i in range(local.az_count) : cidrsubnet(aws_vpc_ipv6_cidr_block_association.ipv6[0].ipv6_cidr_block, 8, i)
-#     for i in range(local.az_count) : cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, i)
+# Generate ipv6 cidrs for public and private subnets
+locals {
+  private_subnet_ipv6_cidrs = var.enable_ipv6 ? {
+    for i,value in local.private_azs : value => cidrsubnet(local.private_ipv6_tier, 4, i)
+  } : {}
 
-#   ] : []
-
-#   public_subnet_ipv6_cidrs = var.enable_ipv6 ? [
-#     for i in range(local.az_count) : cidrsubnet(aws_vpc.main.ipv6_cidr_block, 8, i + local.az_count)
-#   ] : []
-# }
+  public_subnet_ipv6_cidrs = var.enable_ipv6 ? {
+    for i,value in local.public_azs  : value => cidrsubnet(local.public_ipv6_tier, 4, i)
+  } : {}
+}
 
 
 resource "aws_subnet" "private"{
@@ -99,8 +96,8 @@ resource "aws_subnet" "private"{
     cidr_block = each.value
     availability_zone = each.key
 
-    # assign_ipv6_address_on_creation = var.enable_ipv6
-    # ipv6_cidr_block = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs[count.index] : null
+    assign_ipv6_address_on_creation = var.enable_ipv6
+    ipv6_cidr_block = var.enable_ipv6 ? local.private_subnet_ipv6_cidrs[each.key] : null
 
     tags = merge(
       var.tags, 
@@ -122,8 +119,8 @@ resource "aws_subnet" "public"{
     cidr_block = each.value
     availability_zone = each.key
 
-    # assign_ipv6_address_on_creation = var.enable_ipv6
-    # ipv6_cidr_block = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs[count.index] : null
+    assign_ipv6_address_on_creation = var.enable_ipv6
+    ipv6_cidr_block = var.enable_ipv6 ? local.public_subnet_ipv6_cidrs[each.key] : null
     
     tags = merge(
       var.tags, 
