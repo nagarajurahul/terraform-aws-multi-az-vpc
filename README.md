@@ -56,6 +56,9 @@ This module provisions the following AWS resources:
 
 ```hcl
 module "multi_az_vpc" {
+  source  = "nagarajurahul/multi-az-vpc/aws"
+  version = "2.1.0"
+
   # Specify the AWS region for the VPC deployment
   region = "us-east-2"
 
