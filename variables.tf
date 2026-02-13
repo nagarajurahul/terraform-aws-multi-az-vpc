@@ -30,7 +30,7 @@ variable "number_of_required_ips_per_subnet" {
   default = 251
 
   validation {
-    condition = var.number_of_required_ips_per_subnet > 0 && var.number_of_required_ips_per_subnet <= 4091
+    condition     = var.number_of_required_ips_per_subnet > 0 && var.number_of_required_ips_per_subnet <= 4091
     error_message = "Number of required IPs must be more than 0 and less than or equal to 4091. 5 IPs are reserved by AWS!"
   }
 }
