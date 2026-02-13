@@ -53,4 +53,16 @@ variable "availability_zones" {
     enable_nat_gateway = bool
   }))
   #"For enabling Nat gateway for private subnet in this AZ, we also need to create the public subnet in the same AZ - this is to avoid cross AZ traffic costs"
+  validation {
+    condition = alltrue([
+      for az_key, az in var.availability_zones :
+      (
+        az.enable_nat_gateway == false
+        ||
+        (az.public_subnet == true && az.private_subnet == true)
+      )
+    ])
+
+    error_message = "If enable_nat_gateway is true, both public_subnet and private_subnet must also be true in the same AZ."
+  }
 }
