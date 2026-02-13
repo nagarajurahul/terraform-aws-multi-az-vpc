@@ -135,6 +135,8 @@ terraform destroy -auto-approve
 
 * **Required IPs per Subnet**: Takes input of requrieds IPs per subnet. Note - this is for IPs in private subnet
 
+* **Default Subnet Mask in Public Subnets**: Public subnets will be created with subnet mask, holding max of 256 IPs. (which is most in big orgs as well)
+
 <!-- 
 * **Multi-AZ Deployment**: The module will automatically create subnets across all available AZs in the selected region. This ensures high availability and fault tolerance for your infrastructure. -->
 
