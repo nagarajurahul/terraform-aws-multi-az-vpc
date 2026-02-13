@@ -6,14 +6,13 @@ This Terraform module creates a highly available, Multi-AZ Virtual Private Cloud
 
 It provisions public and private subnets, an Internet Gateway, and optional Egress-only and NAT Gateways for secure outbound traffic from private subnets. 
 
-Note: NAT Gateways are created in the same AZ, hence, we need to create public subnet along with private subnet.
-This is to avoid cross-AZ data traffic costs for NATs in different AZ.
+`Note:` NAT Gateways are created in the same AZ, hence, we need to create public subnet along with private subnet. This is to avoid cross-AZ data traffic costs for NATs in different AZ.
 
-Note: Hence, please make sure to set `public_subnet = true, private_subnet = true` when `enable_nat_gateway = true`
+`Note:` Hence, please make sure to set `public_subnet = true, private_subnet = true` when `enable_nat_gateway = true`
 
-New - Additionally, IPv6 support is included for modern network requirements.
+`New` - Additionally, IPv6 support is included for modern network requirements.
 
-New - Added variable to take dynamic inputs for AZs, public and private subnets along with NAT requirements.
+`New` - Added variable to take dynamic inputs for AZs, public and private subnets along with NAT requirements.
 
 This module is designed for scalability, security, and best cloud architecture practices.
 
@@ -24,6 +23,8 @@ This module is designed for scalability, security, and best cloud architecture p
 <!-- **Multi-AZ Deployment**: Dynamically provisions subnets across all available Availability Zones (AZs) in the selected AWS region. -->
 
 **Public & Private Subnets**: Efficiently calculates subnet CIDRs based on the desired number of devices per subnet.
+
+**Required IPs per Subnet**: Takes input of requrieds IPs per subnet. Note - this is for IPs in private subnet
 
 **IPv6 Support**: Adds IPv6 addressing to both the VPC and subnets, ensuring scalability and future-proofing for your infrastructure.
 
@@ -131,6 +132,9 @@ terraform destroy -auto-approve
 * **IPv6**: When enable_ipv6 is set to true, the aws provider will automatically assign an IPv6 CIDR block to the VPC, and subnets will be allocated based on this.
 
 * **NAT Gateway**: If you choose to use a NAT Gateway (enable_nat_gateway = true), this will be created in the same AZ, hence a public subnet needs to be created in the same AZ, and a route will be configured for private subnets to route traffic through it. This is to avoid cross-AZ data traffic costs for NATs in different AZ.
+
+* **Required IPs per Subnet**: Takes input of requrieds IPs per subnet. Note - this is for IPs in private subnet
+
 <!-- 
 * **Multi-AZ Deployment**: The module will automatically create subnets across all available AZs in the selected region. This ensures high availability and fault tolerance for your infrastructure. -->
 
