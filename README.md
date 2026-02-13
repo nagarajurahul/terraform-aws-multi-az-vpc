@@ -56,8 +56,11 @@ This module provisions the following AWS resources:
 
 ```hcl
 module "multi_az_vpc" {
-  source  = "nagarajurahul/multi-az-vpc/aws"
-  version = "2.1.0"
+  # Please use the git source, if you find any troubles with using terraform registry as source
+  source = "git::https://github.com/nagarajurahul/terraform-aws-multi-az-vpc.git?ref=v2.1.0"
+  
+  # source  = "nagarajurahul/multi-az-vpc/aws"
+  # version = "2.1.0"
 
   # Specify the AWS region for the VPC deployment
   region = "us-east-2"
