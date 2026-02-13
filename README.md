@@ -55,9 +55,6 @@ This module provisions the following AWS resources:
 
 ```hcl
 module "multi_az_vpc" {
-  source  = "nagarajurahul/multi-az-vpc/aws"
-  version = "2.0.1"
-
   # Specify the AWS region for the VPC deployment
   region = "us-east-2"
 
@@ -68,7 +65,8 @@ module "multi_az_vpc" {
   vpc_name = "my-multi-az-vpc"
 
   # Number of devices per subnet (used to calculate subnet sizes)
-  number_of_required_ips_per_subnet = 3000
+  # Note this is for IPs in private subnets
+  number_of_required_ips_per_subnet = 1000
 
   # Enable IPv6 support (default is false)
   enable_ipv6 = true
@@ -77,18 +75,21 @@ module "multi_az_vpc" {
   tags = { "Project" = "CloudInfra" }
 
   availability_zones = {
+    # Here we are creating private subnet with NAT, hence public subnet has to be mandatory created
     "az1" = {
       availability_zone  = "us-east-2a"
       public_subnet      = true
       private_subnet     = true
       enable_nat_gateway = true
     }
+    # Case if we dont need private subnet in a AZ
     "az2" = {
       availability_zone  = "us-east-2b"
       public_subnet      = true
       private_subnet     = false
       enable_nat_gateway = false
     }
+    # Here we are creating only private subnet with no NAT, hence public subnet is not mandatory
     "az3" = {
       availability_zone  = "us-east-2c"
       public_subnet      = false
